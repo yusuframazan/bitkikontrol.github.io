@@ -1,26 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor Data</title>
+    <title>Bitki İzleme Web Sitesi</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-    <h1>Sensor Data</h1>
-    <div id="sensorData"></div>
 
-    <script>
-        // sensorData.json dosyasından veriyi almak için bir HTTP GET isteği gönder
-        fetch('/sensorData.json')
-        .then(response => response.json()) // JSON veriyi parse et
-        .then(data => {
-            // Alınan verileri HTML içine yerleştir
-            document.getElementById('sensorData').innerHTML = `
-                <p>Sıcaklık: ${data.temperature} °C</p>
-                <p>Nem: ${data.humidity} %</p>
-            `;
-        })
-        .catch(error => console.error('Hata:', error)); // Hata durumunda konsola bir hata mesajı yazdır
-    </script>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <h1>Bitki İzleme Web Sitesi</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" data-page="home">Ana Sayfa</a></li>
+                    <li><a href="#" data-page="plants">Bitkiler</a></li>
+                    <li><a href="#" data-page="about">Hakkımızda</a></li>
+                    <li><a href="#" data-page="contact">İletişim</a></li>
+                    <li><a href="#" data-page="history">Veri Geçmişi</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content"></main>
+
+    <footer>
+        © 2024 Bitki İzleme Web Sitesi
+    </footer>
+
+    <script src="scripts.js"></script>
 </body>
+
 </html>
