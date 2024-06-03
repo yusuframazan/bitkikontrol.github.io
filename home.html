@@ -1,0 +1,24 @@
+<!-- home.html -->
+
+<section class="plant-info">
+    <h2>Bitki Bilgileri</h2>
+    <div>
+        <label for="plant-select">Bitki Seçin:</label>
+        <select id="plant-select" onchange="updateSensorData()">
+            <option value="domates">Domates</option>
+            <option value="biber">Biber</option>
+            <option value="brokoli">Brokoli</option>
+            <option value="salatalik">Salatalık</option>
+        </select>
+    </div>
+    <p>Bitki Adı: <span id="plant-name">---</span></p>
+    <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
+    <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
+    <p>Nem Oranı: <span id="current-humidity">---</span>%</p>
+    <p>Işık Şiddeti: <span id="ldr-sensor">---</span>%</p>
+    <p id="suggestion"></p>
+</section>
+
+<div class="chart-container">
+    <canvas id="sensor-chart"></canvas>
+</div>
