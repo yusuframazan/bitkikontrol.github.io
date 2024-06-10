@@ -24,7 +24,7 @@ function loadHomePage() {
     document.getElementById("main-content").innerHTML = `
         <section class="plant-info">
             <h2>Bitki Bilgileri</h2>
-            <p>Bitki Adı: <span id="plant-name">---</span></p>
+            <p>Bitki Adı: <span id="plant-name">Domates</span></p>
             <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
             <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
             <p>Nem Oranı: <span id="current-humidity">---</span>%</p>
@@ -60,6 +60,20 @@ function loadPlantsPage() {
             <li><strong>Sıcaklık:</strong> 20-25°C arası idealdir.</li>
             <li><strong>Sulama:</strong> Düzenli sulama yapılmalıdır, ancak fazla suya ihtiyaç duymaz.</li>
         </ul>
+        <p><strong>Brokoli:</strong></p>
+        <ul>
+            <li><strong>Toprak Nem Oranı:</strong> Nemli ve iyi drenajlı toprakları tercih eder.</li>
+            <li><strong>Işık Şiddeti:</strong> Yarı gölge alanlarda yetiştirilebilir.</li>
+            <li><strong>Sıcaklık:</strong> 18-23°C arası idealdir.</li>
+            <li><strong>Sulama:</strong> Toprağı sürekli nemli tutulmalıdır.</li>
+        </ul>
+        <p><strong>Salatalık:</strong></p>
+        <ul>
+            <li><strong>Toprak Nem Oranı:</strong> Yüksek nemli topraklar tercih eder.</li>
+            <li><strong>Işık Şiddeti:</strong> Bol güneş ışığına ihtiyaç duyar.</li>
+            <li><strong>Sıcaklık:</strong> 22-28°C arası idealdir.</li>
+            <li><strong>Sulama:</strong> Sık ve düzenli sulama yapılmalıdır.</li>
+        </ul>
     `;
 }
 
@@ -78,8 +92,8 @@ function loadContactPage() {
         <p>Bizimle iletişime geçmek için aşağıdaki bilgileri kullanabilirsiniz:</p>
         <ul>
             <li>Telefon: 123-456-7890</li>
-            <li>E-posta: info@bitkiizleme.com</li>
-            <li>Adres: Örnek Cad. No: 123, İstanbul, Türkiye</li>
+            <li>E-posta: Yusuf@bitkiizleme.com</li>
+            <li>Adres: istiklal Cad. No: 123, Karabük, Türkiye</li>
         </ul>
         
         <div>
