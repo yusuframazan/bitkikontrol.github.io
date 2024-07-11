@@ -1,71 +1,3 @@
-
-// Sayfa yüklendiğinde ana sayfayı göster
-document.addEventListener("DOMContentLoaded", function () {
-    loadHomePage(); // veya istediğiniz ana sayfa fonksiyonunu çağırın
-});
-// Firebase konfigürasyonu
-const firebaseConfig = {
-    apiKey: "AIzaSyABenFKvbnwgR4mcRGi-V5SQ4Y2alivx7w",
-    authDomain: "bitki-izleme.firebaseapp.com",
-    databaseURL: "https://bitki-izleme-default-rtdb.firebaseio.com",
-    projectId: "bitki-izleme",
-    storageBucket: "bitki-izleme.appspot.com",
-    messagingSenderId: "561641375328",
-    appId: "1:561641375328:web:f00fcc7054b32d36c86505",
-    measurementId: "G-N0QXWTRZVF"
-};
-
-// Firebase'i başlatma
-const app = firebase.initializeApp(firebaseConfig);
-const database = firebase.database(app);
-
-function updateControlStatus() {
-    // Fan ve su motoru durumlarını Firebase'den al ve güncelle
-    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/control.json')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('fan-status').textContent = data.fan ? 'Açık' : 'Kapalı';
-            document.getElementById('water-pump-status').textContent = data.waterPump ? 'Açık' : 'Kapalı';
-        })
-        .catch(error => console.error('Kontrol durumu alınamadı:', error));
-}
-
-function toggleFan() {
-    // Fan durumunu değiştir ve Firebase'e gönder
-    const fanStatus = document.getElementById('fan-status').textContent === 'Kapalı';
-    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/control.json', {
-        method: 'PATCH',
-        body: JSON.stringify({ fan: fanStatus }),
-        headers: { 'Content-Type': 'application/json' }
-    })
-    .then(response => {
-        if (response.ok) {
-            updateControlStatus();
-        } else {
-            console.error('Fan durumu güncellenemedi.');
-        }
-    })
-    .catch(error => console.error('Fan durumu güncellenemedi:', error));
-}
-
-function toggleWaterPump() {
-    // Su motoru durumunu değiştir ve Firebase'e gönder
-    const waterPumpStatus = document.getElementById('water-pump-status').textContent === 'Kapalı';
-    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/control.json', {
-        method: 'PATCH',
-        body: JSON.stringify({ waterPump: waterPumpStatus }),
-        headers: { 'Content-Type': 'application/json' }
-    })
-    .then(response => {
-        if (response.ok) {
-            updateControlStatus();
-        } else {
-            console.error('Su motoru durumu güncellenemedi.');
-        }
-    })
-    .catch(error => console.error('Su motoru durumu güncellenemedi:', error));
-}
-
 function loadPage(page) {
     switch (page) {
         case 'home':
@@ -82,9 +14,6 @@ function loadPage(page) {
             break;
         case 'history':
             loadDataHistory();
-            break;
-        case 'control-panel':
-            loadControlPanel();
             break;
         default:
             loadHomePage();
@@ -164,7 +93,7 @@ function loadContactPage() {
         <ul>
             <li>Telefon: 123-456-7890</li>
             <li>E-posta: Yusuf@bitkiizleme.com</li>
-            <li>Adres: İstiklal Cad. No: 123, Karabük, Türkiye</li>
+            <li>Adres: istiklal Cad. No: 123, Karabük, Türkiye</li>
         </ul>
         
         <div>
@@ -179,83 +108,140 @@ function loadContactPage() {
                 <input type="text" id="name" name="name" required><br>
                 <label for="email">E-posta Adresiniz:</label><br>
                 <input type="email" id="email" name="email" required><br>
+                <label for="subject">Konu:</label><br>
+                <input type="text" id="subject" name="subject" required><br>
                 <label for="message">Mesajınız:</label><br>
-                <textarea id="message" name="message" rows="4" required></textarea><br>
+                <textarea id="message" name="message" required></textarea><br>
                 <button type="submit">Gönder</button>
             </form>
         </section>
     `;
 }
 
-function toggleContactForm() {
-    const contactForm = document.getElementById('contact');
-    if (contactForm.style.display === 'none' || contactForm.style.display === '') {
-        contactForm.style.display = 'block';
-    } else {
-        contactForm.style.display = 'none';
-    }
+function loadDataHistory() {
+    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+        .then(response => response.json())
+        .then(data => {
+            let tableHTML = `
+                <h2>Veri Geçmişi</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zaman</th>
+                            <th>Sıcaklık (°C)</th>
+                            <th>Nem (%)</th>
+                            <th>Toprak Nem Sensörü (%)</th>
+                            <th>Işık Şiddeti</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            Object.keys(data).forEach(key => {
+                const sensor = data[key];
+                const time = new Date(sensor.time).toLocaleString();
+                const temperature = sensor.temperature;
+                const humidity = sensor.humidity;
+                const soilMoisture = sensor.soilMoisture || '---'; // Toprak nem sensörü değeri
+                const ldrSensor = sensor.ldrSensor || '---'; // Işık sensörü değeri
+                tableHTML += `
+                    <tr>
+                        <td>${time}</td>
+                        <td>${temperature}</td>
+                        <td>${humidity}</td>
+                        <td>${soilMoisture}</td>
+                        <td>${ldrSensor}</td>
+                    </tr>
+                `;
+            });
+            tableHTML += `</tbody></table>`;
+            document.getElementById("main-content").innerHTML = tableHTML;
+        })
+        .catch(error => console.error('Veri alınamadı:', error));
+}
+
+function updateSensorData() {
+    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+        .then(response => response.json())
+        .then(data => {
+            const latestReading = data[Object.keys(data).pop()];
+            document.getElementById('current-temperature').textContent = latestReading.temperature;
+            document.getElementById('current-humidity').textContent = latestReading.humidity;
+            document.getElementById('soil-moisture').textContent = latestReading.soilMoisture || '---'; // Toprak nem sensörü değeri
+            document.getElementById('ldr-sensor').textContent = latestReading.ldrSensor || '---'; // Işık sensörü değeri
+
+            // Grafik verilerini güncelle
+            updateChart(latestReading.temperature, latestReading.soilMoisture, latestReading.ldrSensor);
+        })
+        .catch(error => console.error('Veri alınamadı:', error));
+}
+
+function updateChart(temperature, soilMoisture, ldrSensor) {
+    var ctx = document.getElementById('sensor-chart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Sıcaklık', 'Toprak Nem', 'Işık Şiddeti'],
+            datasets: [{
+                label: 'Değerler',
+                data: [temperature, soilMoisture, ldrSensor],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
 
 function submitForm(event) {
     event.preventDefault();
-    const formData = new FormData(document.getElementById('contact-form'));
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const message = formData.get('message');
-
-    // Formu işleme ve Firebase'e gönderme
-    const messagesRef = firebase.database().ref('messages');
-    messagesRef.push({
-        name: name,
-        email: email,
-        message: message
-    }).then(() => {
-        alert('Mesajınız başarıyla gönderildi!');
-        document.getElementById('contact-form').reset();
-    }).catch(error => {
-        console.error('Mesaj gönderilemedi:', error);
-        alert('Mesajınız gönderilemedi. Lütfen tekrar deneyin.');
+    const form = document.getElementById('contact-form');
+    const formData = new FormData(form);
+    const formDataObject = {};
+    formData.forEach((value, key) => {
+        formDataObject[key] = value;
     });
+
+    // Firebase veritabanına veriyi gönder
+    fetch('https://iletisim-902bb-default-rtdb.europe-west1.firebasedatabase.app/contact.json', {
+        method: 'POST',
+        body: JSON.stringify(formDataObject),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Form başarıyla Firebase veritabanına gönderildi.');
+        } else {
+            console.error('Form gönderilirken bir hata oluştu.');
+        }
+    })
+    .catch(error => {
+        console.error('Form gönderilirken bir hata oluştu:', error);
+    });
+
+    // Form alanlarını temizle
+    form.reset();
 }
 
-function loadDataHistory() {
-    document.getElementById("main-content").innerHTML = `
-        <h2>Veri Geçmişi</h2>
-        <p>Burada önceki veri kayıtlarını görüntüleyebilirsiniz.</p>
-        <p>Veri tabanı bağlantısını buraya entegre edebiliriz.</p>
-    `;
+function toggleContactForm() {
+    const contactForm = document.getElementById('contact');
+    contactForm.classList.toggle('active');
 }
 
-function loadControlPanel() {
-    document.getElementById("main-content").innerHTML = `
-        <h2>Kontrol Paneli</h2>
-        <div class="control-panel">
-            <p>Fan Durumu: <span id="fan-status">---</span></p>
-            <button onclick="toggleFan()">Fanı Aç/Kapat</button>
-            <p>Su Motoru Durumu: <span id="water-pump-status">---</span></p>
-            <button onclick="toggleWaterPump()">Su Motorunu Aç/Kapat</button>
-        </div>
-    `;
-    updateControlStatus(); // Kontrol paneli yüklendiğinde durumları güncelle
-}
-
-function updateSensorData() {
-    // Sensör verilerini Firebase'den al ve güncelle
-    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('plant-name').textContent = data.plantName || '---';
-            document.getElementById('soil-moisture').textContent = data.soilMoisture || '---';
-            document.getElementById('current-temperature').textContent = data.temperature || '---';
-            document.getElementById('current-humidity').textContent = data.humidity || '---';
-            document.getElementById('ldr-sensor').textContent = data.lightIntensity || '---';
-
-            // Grafik güncelleme işlemi buraya eklenebilir
-        })
-        .catch(error => console.error('Sensör verileri alınamadı:', error));
-}
-
-// Sayfa yüklendiğinde ana sayfayı göster
-document.addEventListener("DOMContentLoaded", function () {
-    loadHomePage();
-});
+// Sayfa yüklendiğinde Ana Sayfa'yı göster
+loadPage('home');
