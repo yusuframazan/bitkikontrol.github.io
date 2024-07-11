@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitki İzleme Web Sitesi</title>
-        <link rel="website icon"type="png"
-href="images/logo.png">
+    <link rel="stylesheet" href="styles.css">
     <!-- Chart.js kütüphanesini ekleyelim -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDK'larını yükle -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <!-- Kendi script dosyanızı yükle -->
+    <script src="scripts.js"></script>
 </head>
 <body>
     <header>
@@ -23,6 +26,7 @@ href="images/logo.png">
                     <li><a href="#" onclick="loadPage('about')">Hakkımızda</a></li>
                     <li><a href="#" onclick="loadPage('contact')">İletişim</a></li>
                     <li><a href="#" onclick="loadPage('history')">Veri Geçmişi</a></li>
+                    <li><a href="#" onclick="loadPage('control-panel')">Kontrol Paneli</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,10 +36,25 @@ href="images/logo.png">
         <!-- İçerik dinamik olarak buraya yüklenecek -->
     </main>
 
+    <div class="container" id="control-panel" style="display:none;">
+        <h2>Kontrol Paneli</h2>
+        <div class="control-panel">
+            <div>
+                <p>Fan Durumu: <span id="fan-status">Kapalı</span></p>
+                <button onclick="toggleFan()">Fanı Aç/Kapat</button>
+            </div>
+            <div>
+                <p>Su Motoru Durumu: <span id="water-pump-status">Kapalı</span></p>
+                <button onclick="toggleWaterPump()">Su Motorunu Aç/Kapat</button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         © 2024 Bitki İzleme Web Sitesi
     </footer>
 
-    <script src="scripts.js"></script>
+    <!-- Firebase bağlantılarını ve ana script dosyanızı yükle -->
+    <script src="script.js"></script>
 </body>
 </html>
