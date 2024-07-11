@@ -39,7 +39,7 @@ nav ul li a {
     text-decoration: none;
 }
 
-main {
+main, .container {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
@@ -48,19 +48,19 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+h2, .plant-info h2 {
+    color: #4caf50; /* Yeşil tonları */
+}
+
 .plant-info {
     margin-bottom: 20px;
 }
 
-.plant-info h2 {
-    color: #4caf50; /* Yeşil tonları */
-}
-
-.plant-info p {
+.plant-info p, .plant-info p {
     color: #333; /* Koyu gri metin */
 }
 
-.controls button {
+.controls button, .control-panel button {
     padding: 10px 20px;
     font-size: 16px;
     background-color: #4caf50; /* Yeşil tonları */
@@ -70,7 +70,7 @@ main {
     cursor: pointer;
 }
 
-.controls button:hover {
+.controls button:hover, .control-panel button:hover {
     background-color: #388e3c; /* Koyu yeşil hover rengi */
 }
 
